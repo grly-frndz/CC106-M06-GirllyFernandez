@@ -21,14 +21,17 @@ def student_registration(request):
             contact_no=contact_no
         )
 
-        return redirect('registration_success')
+        return redirect(
+            'registration_success',
+            first_name=first_name
+        )
 
     return render(request, 'registration/registration.html')
 
 
-def registration_success(request):
-    return render(request, 'registration/success.html')
-
-
-def registration(request):
-    return render(request, 'registration/registration.html')
+def registration_success(request, first_name):
+    return render(
+        request,
+        'registration/success.html',
+        {'first_name': first_name}
+    )
