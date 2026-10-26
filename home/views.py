@@ -10,3 +10,4 @@ def home(request):
         'show_message': True,
     }
     return render(request, 'home/home.html', context)
+
