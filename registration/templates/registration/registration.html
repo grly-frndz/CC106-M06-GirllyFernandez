@@ -1,11 +1,17 @@
+{% load static %}
 
 <!DOCTYPE html>
 <html>
 <head>
+     <link rel="stylesheet" href="{% static 'registration/style.css' %}">
     <title>Student Registration</title>
 </head>
 <body>
     <h1>Student Registration Form</h1>
+
+    <p>
+        <a href="{% url 'student_list' %}">View Student Directory</a>
+    </p>
 
     <form method="POST">
         {% csrf_token %}
