@@ -1,11 +1,10 @@
-
-from django.http import request
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from django.db.models import Q, query
+from django.db.models import Q
 
 from .models import Student
 from .forms import StudentForm
+
 
 def student_registration(request):
     if request.method == 'POST':
@@ -40,9 +39,10 @@ def registration_success(request, first_name):
         {'first_name': first_name}
     )
 
+
 def student_list(request):
     query = request.GET.get('q', '').strip()
-    
+
     students = Student.objects.all().order_by('last_name', 'first_name')
 
     if query:
@@ -56,12 +56,9 @@ def student_list(request):
         'students': students,
         'query': query,
     }
-    
-    return render(
-        request,
-        'registration/student_list.html',
-        context
-    )
+
+    return render(request, 'registration/student_list.html', context)
+
 
 def student_detail(request, pk):
     student = get_object_or_404(Student, pk=pk)
@@ -87,26 +84,32 @@ def student_edit(request, pk):
 
         return redirect('student_list')
 
-    return render(request, 'registration/student_edit.html', {
-        'student': student
-    })
+    return render(
+        request,
+        'registration/student_edit.html',
+        {'student': student}
+    )
+
 
 def student_create(request):
     if request.method == 'POST':
         form = StudentForm(request.POST)
 
         if form.is_valid():
-            form.save()
-            messages.success(request, 'Student created successfully.')
+            student = form.save()
+            messages.success(request, 'Student created successfully!')
+            print("CREATE MESSAGE ADDED")
             return redirect('student_list')
+
     else:
         form = StudentForm()
 
     return render(
         request,
         'registration/student_form.html',
-        {'form': form, 'page_title': 'Register Student'}
+        {'form': form, 'title': 'Add New Student'}
     )
+
 
 def student_update(request, pk):
     student = get_object_or_404(Student, pk=pk)
@@ -116,15 +119,16 @@ def student_update(request, pk):
 
         if form.is_valid():
             form.save()
-            messages.success(request, 'Student updated successfully.')
-            return redirect('student_detail', pk=student.pk)
+            messages.success(request, 'Student updated successfully!')
+            return redirect('student_list')
+
     else:
         form = StudentForm(instance=student)
 
     return render(
         request,
         'registration/student_form.html',
-        {'form': form, 'page_title': 'Update Student', 'student': student}
+        {'form': form, 'title': 'Update Student'}
     )
 
 def student_delete(request, pk):
@@ -132,7 +136,7 @@ def student_delete(request, pk):
 
     if request.method == 'POST':
         student.delete()
-        messages.success(request, 'Student deleted successfully.')
+        messages.success(request, 'Student deleted successfully!')
         return redirect('student_list')
 
     return render(
@@ -140,4 +144,3 @@ def student_delete(request, pk):
         'registration/student_confirm_delete.html',
         {'student': student}
     )
-
