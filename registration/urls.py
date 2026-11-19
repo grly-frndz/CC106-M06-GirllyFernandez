@@ -1,3 +1,4 @@
+
 from django.urls import path
 from . import views
 
@@ -13,4 +14,7 @@ urlpatterns = [
     path('students/<int:pk>/edit/', views.student_edit, name='student_edit'),
     path('students/<int:pk>/update/', views.student_update, name='student_update'),
     path('students/<int:pk>/delete/', views.student_delete, name='student_delete'),
+
+    # Staff Dashboard
+    path('dashboard/', views.staff_dashboard, name='staff_dashboard'),
 ]

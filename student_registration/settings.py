@@ -28,6 +28,11 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+# Authentication Redirect Settings
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/registration/dashboard/'
+LOGOUT_REDIRECT_URL = '/login/'
+
 # Application definition
 
 
@@ -57,7 +62,7 @@ ROOT_URLCONF = 'student_registration.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

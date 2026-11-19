@@ -1,10 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from django.db.models import Q
+from django.db.models import Q, query
+from django.contrib.auth.decorators import user_passes_test
+from django.shortcuts import render
 
 from .models import Student
 from .forms import StudentForm
 
+def staff_check(user):
+    return user.is_authenticated and user.is_staff
 
 def student_registration(request):
     if request.method == 'POST':
@@ -39,7 +43,7 @@ def registration_success(request, first_name):
         {'first_name': first_name}
     )
 
-
+@user_passes_test(staff_check, login_url='login')
 def student_list(request):
     query = request.GET.get('q', '').strip()
 
@@ -60,6 +64,7 @@ def student_list(request):
     return render(request, 'registration/student_list.html', context)
 
 
+@user_passes_test(staff_check, login_url='login')
 def student_detail(request, pk):
     student = get_object_or_404(Student, pk=pk)
 
@@ -69,6 +74,7 @@ def student_detail(request, pk):
         {'student': student}
     )
 
+@user_passes_test(staff_check, login_url='login')
 def student_edit(request, pk):
     student = get_object_or_404(Student, pk=pk)
 
@@ -91,6 +97,7 @@ def student_edit(request, pk):
     )
 
 
+@user_passes_test(staff_check, login_url='login')
 def student_create(request):
     if request.method == 'POST':
         form = StudentForm(request.POST)
@@ -110,7 +117,7 @@ def student_create(request):
         {'form': form, 'title': 'Add New Student'}
     )
 
-
+@user_passes_test(staff_check, login_url='login')
 def student_update(request, pk):
     student = get_object_or_404(Student, pk=pk)
 
@@ -131,6 +138,7 @@ def student_update(request, pk):
         {'form': form, 'title': 'Update Student'}
     )
 
+@user_passes_test(staff_check, login_url='login')
 def student_delete(request, pk):
     student = get_object_or_404(Student, pk=pk)
 
@@ -144,3 +152,11 @@ def student_delete(request, pk):
         'registration/student_confirm_delete.html',
         {'student': student}
     )
+
+def staff_check(user):
+    return user.is_authenticated and user.is_staff
+
+@user_passes_test(staff_check, login_url='login')
+def staff_dashboard(request):
+    return render(request, 'registration/dashboard.html')
+
